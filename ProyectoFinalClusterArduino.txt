@@ -1,0 +1,114 @@
+#include <Servo.h>
+Servo Gasolina;
+Servo Temperatura;
+Servo Velocidad;
+int Puerta = 13;
+int Cinturon = 12;
+int Frenos = 11;
+int Luces = 10;
+unsigned int enviado;
+unsigned int num;
+int posicion;
+int formula;
+
+void setup()
+{
+
+  Serial.begin(9600);
+  Gasolina.attach(3);
+  Temperatura.attach(4);
+  Velocidad.attach(5);
+
+  pinMode (Puerta, OUTPUT);
+  pinMode (Cinturon, OUTPUT);
+  pinMode (Frenos, OUTPUT);
+  pinMode (Luces, OUTPUT);
+
+}
+
+void loop()
+{
+  if (Serial.available() >= 1)
+  {
+    enviado = Serial.parseInt();
+    num = enviado / 10000;
+    formula = enviado % 10000;
+    posicion = formula;
+    //servos
+    if (num == 01)
+    {
+      Gasolina.write((-2.96*posicion)+168); //Rango 0-50
+      Serial.println ("Servo de Gasolina en movimiento");
+
+    }
+    else if (num == 02)
+    {
+      Temperatura.write((1.9*posicion)-79); //Rango 50-130
+      Serial.println ("Servo de Temperatura en movimiento");
+    }
+    else if (num == 03)
+    {
+      Velocidad.write((-1.3159*posicion)+212.97); //Rango 20-140
+      Serial.println ("Servo de Velocidad en movimiento");
+      Serial.println ("dato recibido:");
+      Serial.println (posicion);
+      Serial.println ("Aplicando la formula de conversion:");
+      Serial.println (posicion*1.1);
+     }
+
+
+else if (num == 04, enviado == 40101)
+{ 
+   Serial.println ("Led Puerta is On");
+    digitalWrite (Puerta, HIGH);
+}
+
+
+else if (num == 04, enviado == 40100)
+{ 
+   Serial.println ("Led Puerta is OFF");
+    digitalWrite (Puerta, LOW);
+}
+
+else if (num == 04, enviado == 40201)
+{ 
+    Serial.println ("Led Cinturon is On");
+    digitalWrite (Cinturon, HIGH);
+}
+
+else if (num == 04, enviado == 40200)
+{ 
+    Serial.println ("Led Cinturon is OFF");
+    digitalWrite (Cinturon, LOW);
+}
+
+else if (num == 04, enviado == 40301)
+{ 
+    Serial.println ("Led Frenos is On");
+    digitalWrite (Frenos, HIGH);
+}
+
+else if (num == 04, enviado == 40300)
+{ 
+    Serial.println ("Led Frenos is OFF");
+    digitalWrite (Frenos, LOW);
+}
+
+else if (num == 04, enviado == 40401)
+{ 
+    Serial.println ("Led Luces Altas is On");
+    digitalWrite (Luces, HIGH);
+}
+
+else if (num == 04, enviado == 40400)
+{ 
+    Serial.println ("Led Luces Altas is OFF");
+    digitalWrite (Luces, LOW);
+}
+
+
+
+     
+}
+
+}
